@@ -1,2 +1,0 @@
-// GET request to retrieve a list of films
-GET http://localhost:5266/actors/details/3
