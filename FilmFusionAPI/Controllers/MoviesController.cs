@@ -4,24 +4,17 @@ using Microsoft.AspNetCore.Mvc;
 [Route("[controller]")]
 public class MoviesController : ControllerBase
 {
-    private readonly MoviesClient _moviesClient;
+    private readonly MovieService _movieService;
 
-    public MoviesController(MoviesClient moviesClient)
+    public MoviesController(MovieService movieService)
     {
-        _moviesClient = moviesClient ?? throw new ArgumentNullException(nameof(moviesClient));
+        _movieService = movieService ?? throw new ArgumentNullException(nameof(movieService));
     }
 
-    [HttpGet("search/{query}")]
-    public async Task<IActionResult> SearchMovies(string query)
+    [HttpGet("filteredMovies")]
+    public async Task<IActionResult> GetFilteredMovies([FromQuery] MovieGenre? genre, [FromQuery] double? popularity)
     {
-        var results = await _moviesClient.SearchMoviesAsync(query);
-        return Ok(results);
-    }
-
-    [HttpGet("details/{id}")]
-    public async Task<IActionResult> GetMovieDetails(int id)
-    {
-        var movieDetails = await _moviesClient.GetMovieDetailsAsync(id);
-        return Ok(movieDetails);
+        var filteredMovies = await _movieService.FilterMoviesAsync(genre, popularity);
+        return Ok(filteredMovies);
     }
 }

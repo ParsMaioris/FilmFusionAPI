@@ -12,8 +12,13 @@ public class MoviesClient
         return await _httpClientWrapper.GetAsync<MovieSearchResult>($"search/movie?query={Uri.EscapeDataString(query)}");
     }
 
-    public async Task<MovieDetails> GetMovieDetailsAsync(int id)
+    public async Task<MovieSearchResult> GetMovieDetailsAsync(int id)
     {
-        return await _httpClientWrapper.GetAsync<MovieDetails>($"movie/{id}");
+        return await _httpClientWrapper.GetAsync<MovieSearchResult>($"movie/{id}");
+    }
+
+    public async Task<MovieSearchResult> GetMoviesAsync(int pageNumber = 30)
+    {
+        return await _httpClientWrapper.GetAsync<MovieSearchResult>($"discover/movie?page={pageNumber}");
     }
 }

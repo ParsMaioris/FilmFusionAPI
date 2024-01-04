@@ -21,6 +21,7 @@ builder.Services.AddSingleton(MoviesApi);
 builder.Services.AddSingleton<ILoggerService, LoggerService>();
 builder.Services.AddSingleton<IHttpClientWrapper, HttpClientWrapper>();
 builder.Services.AddScoped<MoviesClient>();
+builder.Services.AddScoped<MovieService>();
 
 var app = builder.Build();
 
