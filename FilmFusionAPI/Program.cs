@@ -3,6 +3,10 @@
 // Add services to the container.
 builder.Services.AddControllers();
 
+// Add Swagger services
+builder.Services.AddEndpointsApiExplorer(); // Optional, but recommended for API exploration
+builder.Services.AddSwaggerGen();
+
 // Bind MoviesApi from appsettings.json and register it
 var MoviesApiSection = builder.Configuration.GetSection("MoviesApi");
 var MoviesApi = MoviesApiSection.Get<MoviesApiSetting>();
@@ -25,6 +29,16 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
+}
+else
+{
+    app.UseSwagger();
+
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = string.Empty; 
+    });
 }
 
 app.UseHttpsRedirection();
