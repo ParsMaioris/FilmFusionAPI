@@ -3,19 +3,20 @@
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Bind HttpClientSettings from appsettings.json and register it
-var httpClientSettingsSection = builder.Configuration.GetSection("HttpClientSettings");
-var httpClientSettings = httpClientSettingsSection.Get<HttpClientSettings>();
-if (httpClientSettings == null)
+// Bind MoviesApi from appsettings.json and register it
+var MoviesApiSection = builder.Configuration.GetSection("MoviesApi");
+var MoviesApi = MoviesApiSection.Get<MoviesApiSetting>();
+if (MoviesApi == null)
 {
-    throw new InvalidOperationException("Failed to bind HttpClientSettings.");
+    throw new InvalidOperationException("Failed to bind MoviesApi.");
 }
 
-builder.Services.AddSingleton(httpClientSettings);
+builder.Services.AddSingleton(MoviesApi);
 
-// Register ILoggerService and HttpClientWrapper with DI container
+// Register with DI container
 builder.Services.AddSingleton<ILoggerService, LoggerService>();
 builder.Services.AddSingleton<IHttpClientWrapper, HttpClientWrapper>();
+builder.Services.AddScoped<MoviesClient>();
 
 var app = builder.Build();
 

@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Text;
 using Newtonsoft.Json;
 
@@ -5,27 +6,50 @@ public class HttpClientWrapper : IHttpClientWrapper
 {
     private readonly HttpClient _httpClient;
     private readonly ILoggerService _logger;
+    private readonly string _apiKey;
+    private readonly string _readAccessToken;
 
-    public HttpClientWrapper(HttpClientSettings settings, ILoggerService logger)
+    public HttpClientWrapper(MoviesApiSetting settings, ILoggerService logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _httpClient = new HttpClient
         {
             BaseAddress = new Uri(settings.BaseAddress)
         };
+        _apiKey = settings.ApiKey;
+        _readAccessToken = settings.ReadAccessToken;
+
+        if (!string.IsNullOrEmpty(_readAccessToken))
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = 
+                new AuthenticationHeaderValue("Bearer", _readAccessToken);
+        }
+    }
+
+    private HttpRequestMessage CreateRequest(HttpMethod method, string uri)
+    {
+        var request = new HttpRequestMessage(method, uri);
+
+        if (!string.IsNullOrEmpty(_apiKey))
+        {
+            request.RequestUri = new Uri($"{_httpClient.BaseAddress}{uri}?api_key={_apiKey}");
+        }
+
+        return request;
     }
 
     public async Task<T> GetAsync<T>(string uri) where T : new()
     {
         try
         {
-            var response = await _httpClient.GetAsync(uri);
+            var request = CreateRequest(HttpMethod.Get, uri);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(responseContent) ?? new T();
         }
-        catch (HttpRequestException e)
+                catch (HttpRequestException e)
         {
             _logger.LogError($"Error fetching data from {uri}: {e.Message}");
             throw new ApplicationException($"Error fetching data from {uri}: {e.Message}", e);
@@ -49,7 +73,10 @@ public class HttpClientWrapper : IHttpClientWrapper
             var json = JsonConvert.SerializeObject(data);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync(uri, content);
+            var request = CreateRequest(HttpMethod.Post, uri);
+            request.Content = content;
+
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
