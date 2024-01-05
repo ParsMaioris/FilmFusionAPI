@@ -7,12 +7,12 @@ public class MovieSearchResult
 
 public class Movie
 {
+    public int Id { get; set; }
     public bool Adult { get; set; }
     public string BackdropPath { get; set; }
 
     [JsonProperty("genre_ids")]
     public List<int> GenreIds { get; set; }
-    public int Id { get; set; }
     public string OriginalLanguage { get; set; }
     public string OriginalTitle { get; set; }
     public string Overview { get; set; }
