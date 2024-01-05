@@ -17,7 +17,14 @@ public class MovieServiceTests
         mockMoviesClient.Setup(client => client.GetMoviesAsync(It.IsAny<int>()))
             .ReturnsAsync(new MovieSearchResult { Results = SampleMovies });
 
-        var movieService = new MovieService(mockMoviesClient.Object);
+        var mockDataValidator = new Mock<IDataValidator>();
+        mockDataValidator.Setup(validator => 
+            validator.ValidateNotEmpty(It.IsAny<IEnumerable<Movie>>(), It.IsAny<string>()));
+        mockDataValidator.Setup(validator => 
+            validator.ValidateSufficientItems(It.IsAny<IEnumerable<Movie>>(), It.IsAny<int>(), It.IsAny<string>()));
+
+        var movieService = new MovieService(mockMoviesClient.Object, mockDataValidator.Object);
+
 
         // Act
         var filteredMovies = await movieService.FilterMoviesAsync(movieGenre, minPopularity);
@@ -82,5 +89,3 @@ public class MovieBuilder
         return _movie;
     }
 }
-
-
