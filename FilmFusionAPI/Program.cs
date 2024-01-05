@@ -20,7 +20,7 @@ builder.Services.AddSingleton(MoviesApi);
 // Register with DI container
 builder.Services.AddSingleton<ILoggerService, LoggerService>();
 builder.Services.AddSingleton<IHttpClientWrapper, HttpClientWrapper>();
-builder.Services.AddScoped<MoviesClient>();
+builder.Services.AddScoped<IMoviesClient, MoviesClient>();
 builder.Services.AddScoped<MovieService>();
 
 var app = builder.Build();

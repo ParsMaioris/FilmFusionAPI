@@ -1,4 +1,4 @@
-public class MoviesClient
+public class MoviesClient : IMoviesClient
 {
     private readonly IHttpClientWrapper _httpClientWrapper;
 
@@ -17,7 +17,7 @@ public class MoviesClient
         return await _httpClientWrapper.GetAsync<MovieSearchResult>($"movie/{id}");
     }
 
-    public async Task<MovieSearchResult> GetMoviesAsync(int pageNumber = 30)
+    public async Task<MovieSearchResult> GetMoviesAsync(int pageNumber)
     {
         return await _httpClientWrapper.GetAsync<MovieSearchResult>($"discover/movie?page={pageNumber}");
     }

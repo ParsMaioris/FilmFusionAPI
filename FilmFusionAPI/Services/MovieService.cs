@@ -1,8 +1,8 @@
 public class MovieService
 {
-    private readonly MoviesClient _moviesClient;
+    private readonly IMoviesClient _moviesClient;
 
-    public MovieService(MoviesClient moviesClient)
+    public MovieService(IMoviesClient moviesClient)
     {
         _moviesClient = moviesClient ?? throw new ArgumentNullException(nameof(moviesClient));
     }
