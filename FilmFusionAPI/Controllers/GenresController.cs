@@ -7,6 +7,7 @@ public class GenresController : ControllerBase
     [HttpGet("list")]
     public IActionResult ListGenres()
     {
+        // TODO: Implement ListGenres
         return Ok();
     }
 }
