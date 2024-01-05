@@ -6,7 +6,7 @@ FilmFusion API is a .NET 7 web API project, designed to interface with the Movie
 
 ## Features
 
-- **Controllers**: Includes various controllers such as MoviesController, ReviewsController, and GenresController, catering to different aspects of movie data.
+- **Controllers**: Includes various controllers such as MoviesController, CreatorsController, and GenresController, catering to different aspects of movie data.
 - **External API Integration**: Utilizes the MovieDB API for fetching movie-related data.
 - **API Key Management**: Implements .NET Secrets for secure API key and access token management.
 
